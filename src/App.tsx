@@ -1,10 +1,10 @@
-import { TextField } from '@mui/material'
-
 function App() {
 
-  return (
-    <TextField label="Name" />
-  )
+    return (
+        <>
+            <h1>DashBoard</h1>
+        </>
+    );
 }
 
-export default App
+export default App;
