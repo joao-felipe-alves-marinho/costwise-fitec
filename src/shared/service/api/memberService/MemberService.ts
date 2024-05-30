@@ -37,7 +37,7 @@ export async function getMembers(project_id: number): Promise<Member[] | undefin
     try {
         const response = await Api.get(`projects/${project_id}/members`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Member[];
         }
     } catch (error) {
         console.error(error);
@@ -48,7 +48,7 @@ export async function getMember(project_id: number, member_id: number): Promise<
     try {
         const response = await Api.get(`projects/${project_id}/members/${member_id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Member;
         }
     } catch (error) {
         console.error(error);
@@ -59,7 +59,7 @@ export async function createMember(project_id: number, member_id: number, data: 
     try {
         const response = await Api.post(`projects/${project_id}/members/${member_id}`, data);
         if (response.status === 201) {
-            return response.data;
+            return response.data as Member;
         }
     } catch (error) {
         console.error(error);
@@ -70,7 +70,7 @@ export async function updateMember(project_id: number, member_id: number, data: 
     try {
         const response = await Api.put(`projects/${project_id}/members/${member_id}`, data);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Member;
         }
     } catch (error) {
         console.error(error);
@@ -93,7 +93,7 @@ export async function assignMember(project_id: number, member_id: number, task_i
     try {
         const response = await Api.put(`projects/${project_id}/members/${member_id}/${task_id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Member;
         }
     } catch (error) {
         console.error(error);

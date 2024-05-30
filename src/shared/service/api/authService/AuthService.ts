@@ -20,6 +20,14 @@ interface ResetPasswordData {
     password: string;
 }
 
+interface Response {
+    status: number;
+    data: {
+        access_token: string;
+        refresh_token: string;
+    };
+}
+
 function getAccessToken() {
     return localStorage.getItem('access_token');
 }
@@ -34,10 +42,10 @@ function setRefreshToken(token: string) {
 
 export async function refresh(data: RefreshData) {
     try {
-        const response = await axios.put('/tokens', data);
+        const response: Response = await axios.put('/tokens', data);
         if (response.status === 200) {
             setAccessToken(response.data.access_token);
-            Api.defaults.headers['Authorization'] = `Bearer ${getAccessToken()}`;
+            Api.defaults.headers.Authorization = `Bearer ${getAccessToken()}`;
 
         }
     } catch (error) {
@@ -47,11 +55,11 @@ export async function refresh(data: RefreshData) {
 
 export async function login(data: LoginData) {
     try {
-        const response = await Api.post('/tokens', {}, { auth: data });
+        const response: Response = await Api.post('/tokens', {}, { auth: data });
         if (response.status === 200) {
             setAccessToken(response.data.access_token);
             setRefreshToken(response.data.refresh_token);
-            Api.defaults.headers['Authorization'] = `Bearer ${getAccessToken()}`;
+            Api.defaults.headers.Authorization = `Bearer ${getAccessToken()}`;
             return true;
         }
     } catch (error) {
@@ -65,7 +73,7 @@ export async function logout() {
         if (response.status === 204) {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-            delete Api.defaults.headers['Authorization'];
+            delete Api.defaults.headers.Authorization;
             return true;
         }
     } catch (error) {

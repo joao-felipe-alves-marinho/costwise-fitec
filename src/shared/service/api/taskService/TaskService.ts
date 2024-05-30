@@ -39,7 +39,7 @@ export async function getTasks(project_id: number): Promise<Task[] | undefined> 
     try {
         const response = await Api.get(`projects/${project_id}/tasks`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Task[];
         }
     } catch (error) {
         console.error(error);
@@ -50,7 +50,7 @@ export async function getTask(project_id: number, task_id: number): Promise<Task
     try {
         const response = await Api.get(`projects/${project_id}/tasks/${task_id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Task;
         }
     } catch (error) {
         console.error(error);
@@ -61,7 +61,7 @@ export async function createTask(project_id: number, task_id: number, data: Crea
     try {
         const response = await Api.post(`projects/${project_id}/tasks/${task_id}`, data);
         if (response.status === 201) {
-            return response.data;
+            return response.data as Task;
         }
     } catch (error) {
         console.error(error);
@@ -72,7 +72,7 @@ export async function updateTask(project_id: number, task_id: number, data: Upda
     try {
         const response = await Api.put(`projects/${project_id}/tasks/${task_id}`, data);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Task;
         }
     } catch (error) {
         console.error(error);
@@ -95,7 +95,7 @@ export async function assignMember(project_id: number, task_id: number, member_i
     try {
         const response = await Api.put(`projects/${project_id}/tasks/${task_id}/${member_id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Task;
         }
     } catch (error) {
         console.error(error);

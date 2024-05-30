@@ -33,7 +33,7 @@ export async function getUsers(): Promise<User[] | undefined> {
     try {
         const response = await Api.get('/users');
         if (response.status === 200) {
-            return response.data;
+            return response.data as User[];
         }
     } catch (error) {
         console.error(error);
@@ -44,7 +44,7 @@ export async function getUser(id: string): Promise<UserResponse | undefined>{
     try {
         const response = await Api.get(`/users/${id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as UserResponse;
         }
     } catch (error) {
         console.error(error);
@@ -55,7 +55,7 @@ export async function createUser(data: CreateUserDato): Promise<UserResponse | u
     try {
         const response = await Api.post('/users', data);
         if (response.status === 201) {
-            return response.data;
+            return response.data as UserResponse;
         }
     } catch (error) {
         console.error(error);
@@ -66,7 +66,7 @@ export async function updateUser(data: UpdateUserDato): Promise<UserResponse | u
     try {
         const response = await Api.put('/users', data);
         if (response.status === 200) {
-            return response.data;
+            return response.data as UserResponse;
         }
     } catch (error) {
         console.error(error);

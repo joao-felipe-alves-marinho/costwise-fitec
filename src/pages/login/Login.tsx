@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Link, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Link, Paper, TextField, Typography } from '@mui/material';
 
 export default function Login() {
     return (
@@ -41,5 +41,5 @@ export default function Login() {
                 <Typography align="center">Ainda não possui uma conta? <Link href='#'>Cadastre-se</Link></Typography>
             </Box>
         </Box>
-    )
+    );
 } 

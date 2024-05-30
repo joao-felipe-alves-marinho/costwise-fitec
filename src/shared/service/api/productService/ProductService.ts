@@ -39,7 +39,7 @@ export async function getProducts(project_id: number): Promise<Product[] | undef
     try {
         const response = await Api.get(`projects/${project_id}/products`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Product[];
         }
     } catch (error) {
         console.error(error);
@@ -50,7 +50,7 @@ export async function getProduct(project_id: number, product_id: number): Promis
     try {
         const response = await Api.get(`projects/${project_id}/products/${product_id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Product;
         }
     } catch (error) {
         console.error(error);
@@ -61,7 +61,7 @@ export async function createProduct(project_id: number, product_id: number, data
     try {
         const response = await Api.post(`projects/${project_id}/products/${product_id}`, data);
         if (response.status === 201) {
-            return response.data;
+            return response.data as Product;
         }
     } catch (error) {
         console.error(error);
@@ -72,7 +72,7 @@ export async function updateProduct(project_id: number, product_id: number, data
     try {
         const response = await Api.put(`projects/${project_id}/products/${product_id}`, data);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Product;
         }
     } catch (error) {
         console.error(error);

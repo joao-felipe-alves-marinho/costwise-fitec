@@ -76,7 +76,7 @@ export async function getProjects(): Promise<Project[] | undefined> {
     try {
         const response = await Api.get('/projects');
         if (response.status === 200) {
-            return response.data;
+            return response.data as Project[];
         }
     } catch (error) {
         console.error(error);
@@ -87,7 +87,7 @@ export async function getProject(id: string): Promise<Project | undefined> {
     try {
         const response = await Api.get(`/projects/${id}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Project;
         }
     } catch (error) {
         console.error(error);
@@ -98,7 +98,7 @@ export async function createProject(data: CreateProjectData): Promise<Project | 
     try {
         const response = await Api.post('/projects', data);
         if (response.status === 201) {
-            return response.data;
+            return response.data as Project;
         }
     } catch (error) {
         console.error(error);
@@ -109,7 +109,7 @@ export async function updateProject(id: string, data: UpdateProjectData): Promis
     try {
         const response = await Api.put(`/projects/${id}`, data);
         if (response.status === 200) {
-            return response.data;
+            return response.data as Project;
         }
     } catch (error) {
         console.error(error);
@@ -132,7 +132,7 @@ export async function totalCostMember(id: string): Promise<MembersCosts | undefi
     try {
         const response = await Api.get(`/projects/${id}/members_costs`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as MembersCosts;
         }
     } catch (error) {
         console.error(error);
@@ -143,7 +143,7 @@ export async function totalCostProductsByType(id: string): Promise<ProductByType
     try {
         const response = await Api.get(`/projects/${id}/products_by_type`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as ProductByTypeCost;
         }
     } catch (error) {
         console.error(error);
@@ -154,7 +154,7 @@ export async function totalCostProductsByLicense(id: string): Promise<ProductByL
     try {
         const response = await Api.get(`/projects/${id}/products_by_license`);
         if (response.status === 200) {
-            return response.data;
+            return response.data as ProductByLicenseCost;
         }
     } catch (error) {
         console.error(error);
