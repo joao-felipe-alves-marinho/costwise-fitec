@@ -1,8 +1,15 @@
+import { RouterProvider } from 'react-router-dom';
+
+import router from './router/Router';
+import { AuthProvider } from './shared/contexts';
+
 function App() {
 
     return (
         <>
-            <h1>DashBoard</h1>
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
         </>
     );
 }

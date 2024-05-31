@@ -102,3 +102,7 @@ export async function resetPassword(data: ResetPasswordData) {
         console.error(error);
     }
 }
+
+export function isAuthenticated() {
+    return getAccessToken() !== null;
+}

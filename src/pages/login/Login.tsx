@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Link, Paper, TextField, Typography } from '@mui/material';
 
-export default function Login() {
+export function Login() {
     return (
         <Box
             position='absolute'

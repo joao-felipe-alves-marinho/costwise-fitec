@@ -2,7 +2,7 @@ import axios from 'axios';
 import { refresh } from './authService/AuthService';
 
 const Api = axios.create({
-    baseURL: import.meta.env.VITE_Api_URL as string,
+    baseURL: import.meta.env.VITE_Api_URL + '/api/v1',
 });
 
 Api.interceptors.response.use(function (response) { return response; },

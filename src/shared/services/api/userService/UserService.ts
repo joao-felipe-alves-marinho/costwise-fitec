@@ -19,7 +19,7 @@ interface User {
 }
 
 interface Project {
-    id: string;
+    id: number;
     name_project: string;
 
 }
@@ -43,6 +43,17 @@ export async function getUsers(): Promise<User[] | undefined> {
 export async function getUser(id: string): Promise<UserResponse | undefined>{
     try {
         const response = await Api.get(`/users/${id}`);
+        if (response.status === 200) {
+            return response.data as UserResponse;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getMe(): Promise<UserResponse | undefined>{
+    try {
+        const response = await Api.get('/users/me');
         if (response.status === 200) {
             return response.data as UserResponse;
         }
