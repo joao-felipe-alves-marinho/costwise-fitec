@@ -16,8 +16,8 @@ interface RequestResetPasswordData {
 }
 
 interface ResetPasswordData {
-    reset_token: string;
-    password: string;
+    token: string;
+    new_password: string;
 }
 
 interface Response {
@@ -83,9 +83,12 @@ export async function logout() {
 
 export async function requestResetPassword(data: RequestResetPasswordData) {
     try {
-        const response = await Api.post('/password-reset', data);
+        const response = await Api.post('/tokens/reset', data).catch(() => { return { 'status': 404 }; });
         if (response.status === 204) {
             return true;
+        }
+        if (response.status === 404) {
+            return false;
         }
     } catch (error) {
         console.error(error);
@@ -94,9 +97,12 @@ export async function requestResetPassword(data: RequestResetPasswordData) {
 
 export async function resetPassword(data: ResetPasswordData) {
     try {
-        const response = await Api.put('/password-reset', data);
+        const response = await Api.put('/tokens/reset', data).catch(() => { return { 'status': 400 }; });
         if (response.status === 204) {
             return true;
+        }
+        if (response.status === 400) {
+            return false;
         }
     } catch (error) {
         console.error(error);

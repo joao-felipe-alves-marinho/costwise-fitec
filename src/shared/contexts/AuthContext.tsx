@@ -1,5 +1,5 @@
-import React, { createContext, useState, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import { login, logout } from '../services/api/authService/AuthService';
 import { getMe } from '../services/api/userService/UserService';
@@ -25,11 +25,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-interface AuthProviderProps {
-    children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = () => {
     const [user, setUser] = useState<User | undefined>(undefined);
 
     const navigate = useNavigate();
@@ -41,8 +37,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             await login({ username: username, password: password });
             try {
                 const user = await getMe();
-                setUser(user);
-                navigate('/');
+                if (user) {
+                    setUser(user);
+                    navigate('/');
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -67,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             login: handleLogin,
             logout: handleLogout
         }}>
-            {children}
+            <Outlet />
         </AuthContext.Provider>
     );
 };

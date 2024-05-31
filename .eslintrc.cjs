@@ -6,7 +6,7 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
-    
+
   },
   extends: [
     'eslint:recommended',
@@ -35,6 +35,11 @@ module.exports = {
     'semi': [
       'error',
       'always'
-    ]
+    ],
+    "@typescript-eslint/no-misused-promises": [2, {
+      "checksVoidReturn": {
+        "attributes": false
+      }
+    }]
   },
 }
