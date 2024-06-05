@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { createUser } from '../../shared/services/api/userService/UserService';
-import LayoutAuth from '../../shared/layouts/LayoutAuth';
+import LayoutNoAuth from '../../shared/layouts/LayoutNoAuth';
 import { useNavigate } from 'react-router-dom';
 
 interface SignUpForm {
@@ -38,31 +38,26 @@ export function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     const [alert, setAlert] = useState(false);
 
-    async function onSubmit(data: SignUpForm) {
-        try {
-            setIsLoading(true);
-            setAlert(false);
-            await createUser({ email: data.email, username: data.username, password: data.password })
-                .then((data) => {
-                    if (data) {
-                        navigate('/login');
-                    }
-                })
-                .catch((error) => {
-                    setAlert(true);
-                    console.error(error);
-                });
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-        }
+    function onSubmit(data: SignUpForm) {
+        setIsLoading(true);
+        setAlert(false);
+        createUser(data)
+            .then(() => {
+                navigate('/login');
+            })
+            .catch(() => {
+                setAlert(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     const [showPassword, setShowPassword] = useState(false);
     function toggleShowPassword() { setShowPassword((show) => !show); }
 
     return (
-        <LayoutAuth>
+        <LayoutNoAuth>
             <Typography variant="h4">Crie uma conta na CostWise</Typography>
             <Divider />
             <Box
@@ -139,6 +134,6 @@ export function SignUp() {
                 </Button>
             </Box>
             <Typography align="center">Já possui uma conta? <Link href='/login'>Login</Link></Typography>
-        </LayoutAuth >
+        </LayoutNoAuth >
     );
 }

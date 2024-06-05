@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { requestResetPassword } from '../../shared/services/api/authService/AuthService';
-import LayoutAuth from '../../shared/layouts/LayoutAuth';
+import LayoutNoAuth from '../../shared/layouts/LayoutNoAuth';
 
 interface RequestResetPasswordForm {
     email: string;
@@ -29,30 +29,24 @@ export function RequestResetPassword() {
     const [success, setSuccess] = useState(false);
 
 
-    async function onSubmit(data: RequestResetPasswordForm) {
-        try {
-            setIsLoading(true);
-            setAlert(false);
-            setSuccess(false);
-            await requestResetPassword({ email: data.email })
-                .then((response) => {
-                    if (response) {
-                        setSuccess(true);
-                    } else {
-                        setAlert(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-        }
+    function onSubmit(data: RequestResetPasswordForm) {
+        setIsLoading(true);
+        setAlert(false);
+        setSuccess(false);
+        requestResetPassword(data)
+            .then(() => {
+                setSuccess(true);
+            })
+            .catch(() => {
+                setAlert(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     return (
-        <LayoutAuth>
+        <LayoutNoAuth>
             <Typography variant="h4">Recupere sua senha</Typography>
             <Divider />
             <Box
@@ -85,6 +79,6 @@ export function RequestResetPassword() {
                 </Button>
             </Box>
             <Typography align="center"><Link href='/login'>Voltar ao Login</Link></Typography>
-        </LayoutAuth>
+        </LayoutNoAuth>
     );
 }

@@ -4,8 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import useAuth from '../../shared/hooks/useAuth';
-import LayoutAuth from '../../shared/layouts/LayoutAuth';
+import { login } from '../../shared/services/api/authService/AuthService';
+import LayoutNoAuth from '../../shared/layouts/LayoutNoAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginForm {
     username: string;
@@ -28,27 +29,34 @@ export function Login() {
         mode: 'onChange'
     });
 
-    const { login } = useAuth();
+    const navigate = useNavigate();
+
     const [isLoading, setIsLoading] = useState(false);
     const [alert, setAlert] = useState(false);
+    const [success, setSuccess] = useState(false);
 
-    async function onSubmit(data: LoginForm) {
-        try {
-            setIsLoading(true);
-            setAlert(false);
-            await login(data.username, data.password);
-            setAlert(true);
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-        }
+    function onSubmit(data: LoginForm) {
+        setIsLoading(true);
+        setSuccess(false);
+        setAlert(false);
+        login(data)
+            .then(() => {
+                setSuccess(true);
+                navigate('/');
+            })
+            .catch(() => {
+                setAlert(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     const [showPassword, setShowPassword] = useState(false);
     function toggleShowPassword() { setShowPassword((show) => !show); }
 
     return (
-        <LayoutAuth>
+        <LayoutNoAuth>
             <Typography variant="h4">Faça Login na CostWise</Typography>
             <Divider />
             <Box
@@ -59,6 +67,7 @@ export function Login() {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 {alert && <Alert severity='error' variant='filled'>Credenciais Inválidas</Alert>}
+                {success && <Alert severity='success' variant='filled'>Login efetuado com sucesso</Alert>}
                 <TextField
                     label='Username'
                     placeholder="Jean Lucas"
@@ -97,6 +106,6 @@ export function Login() {
                 </Button>
             </Box>
             <Typography align="center">Ainda não possui uma conta? <Link href='/signup'>Cadastre-se</Link></Typography>
-        </LayoutAuth >
+        </LayoutNoAuth >
     );
 } 

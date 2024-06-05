@@ -1,13 +1,15 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import { Login, RequestResetPassword, ResetPassword, SignUp } from '../pages';
-import { AuthProvider } from '../shared/contexts';
+import { Home, Login, RequestResetPassword, ResetPassword, SignUp } from '../pages';
+import LayoutAuth from '../shared/layouts/LayoutAuth';
 import ProtectedRoutes from './ProtectedRoutes';
+import NoAuthRoutes from './NoAuthRoutes';
+import { UserLoader } from '../shared/loaders';
 
 
 const router = createBrowserRouter([
     {
-        element: <AuthProvider />,
+        element: <NoAuthRoutes />,
         children: [
             {
                 path: '/login',
@@ -22,15 +24,25 @@ const router = createBrowserRouter([
                 element: <RequestResetPassword />
             },
             {
-                path: '/reset-password',
+                path: '/reset-password/',
                 element: <ResetPassword />
             },
             {
-                element: <ProtectedRoutes />,
+                path: '*',
+                element: <Navigate to="/login" replace />
+            }
+        ]
+    },
+    {
+        element: <ProtectedRoutes />,
+        children: [
+            {
+                element: <LayoutAuth />,
+                loader: UserLoader,
                 children: [
                     {
                         path: '/',
-                        element: <h1>dash</h1>
+                        element: <Home />
                     },
                     {
                         path: '/project/:id',
@@ -57,12 +69,10 @@ const router = createBrowserRouter([
                         element: <Navigate to="/" replace />
                     }
                 ]
-            },
-            {
-                path: '*',
-                element: <Navigate to="/login" replace />
-            }]
+            }
+        ]
     },
 ]);
+
 
 export default router;

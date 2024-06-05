@@ -1,97 +1,72 @@
+import { User } from '../../../types/Types';
 import { Api } from '../Api';
 
-interface CreateUserDato {
-    email: string;
-    username: string;
-    password: string;
-}
 
-interface UpdateUserDato {
-    email?: string;
-    username?: string;
-    password?: string;
-}
-
-interface User {
-    id: number;
-    email: string;
-    username: string;
-}
-
-interface Project {
-    id: number;
-    name_project: string;
-
-}
-
-interface UserResponse extends User {
-    projects: Project[];
-}
-
-
-export async function getUsers(): Promise<User[] | undefined> {
-    try {
-        const response = await Api.get('/users');
-        if (response.status === 200) {
-            return response.data as User[];
+export async function getUsers(): Promise<User[] | null> {
+    return await Api.get('/users').then((response) => {
+        if (response.status !== 200) {
+            return null;
         }
-    } catch (error) {
+        return response.data as User[];
+    }).catch((error) => {
         console.error(error);
-    }
+        return null;
+    });
 }
 
-export async function getUser(id: string): Promise<UserResponse | undefined>{
-    try {
-        const response = await Api.get(`/users/${id}`);
-        if (response.status === 200) {
-            return response.data as UserResponse;
+export async function getUser(id: string): Promise<User | null> {
+    return await Api.get(`/users/${id}`).then((response) => {
+        if (response.status !== 200) {
+            return null;
         }
-    } catch (error) {
+        return response.data as User;
+    }).catch((error) => {
         console.error(error);
-    }
+        return null;
+    });
 }
 
-export async function getMe(): Promise<UserResponse | undefined>{
-    try {
-        const response = await Api.get('/users/me');
-        if (response.status === 200) {
-            return response.data as UserResponse;
+export async function getMe(): Promise<User | null> {
+    return await Api.get('/users/me').then((response) => {
+        if (response.status !== 200) {
+            return null;
         }
-    } catch (error) {
+        return response.data as User;
+    }).catch((error) => {
         console.error(error);
-    }
+        return null;
+    });
 }
 
-export async function createUser(data: CreateUserDato): Promise<UserResponse | undefined>{
-    try {
-        const response = await Api.post('/users', data);
-        if (response.status === 201) {
-            return response.data as UserResponse;
+export async function createUser(data: Omit<User, 'id'>): Promise<User | null> {
+    return await Api.post('/users', data).then((response) => {
+        if (response.status !== 201) {
+            return null;
         }
-    } catch (error) {
+        return response.data as User;
+    }).catch((error) => {
         console.error(error);
-    }
+        return null;
+    });
 }
 
-export async function updateUser(data: UpdateUserDato): Promise<UserResponse | undefined>{
-    try {
-        const response = await Api.put('/users', data);
-        if (response.status === 200) {
-            return response.data as UserResponse;
+export async function updateUser(data: Partial<User>): Promise<User | null> {
+    return await Api.put('/users', data).then((response) => {
+        if (response.status !== 200) {
+            return null;
         }
-    } catch (error) {
+        return response.data as User;
+    }).catch((error) => {
         console.error(error);
-    }
+        return null;
+    });
 }
 
-export async function deleteUser(): Promise<boolean>{
-    try {
-        const response = await Api.delete('/users');
-        if (response.status === 204) {
-            return true;
-        }
-    } catch (error) {
-        console.error(error);
-    }
-    return false;
+export async function deleteUser(): Promise<boolean> {
+    return await Api.delete('/users')
+        .then(() => { return true; })
+        .catch((error) => {
+            console.error(error);
+            return false;
+        });
 }

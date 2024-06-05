@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Alert, Box, Button, CircularProgress, Divider, Icon, IconButton, Link, TextField, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { resetPassword } from '../../shared/services/api/authService/AuthService';
-import LayoutAuth from '../../shared/layouts/LayoutAuth';
+import LayoutNoAuth from '../../shared/layouts/LayoutNoAuth';
 
 interface ResetPasswordForm {
     password: string;
@@ -27,8 +27,6 @@ export function ResetPassword() {
         mode: 'onChange'
     });
 
-    const navigate = useNavigate();
-
     const [searchParams] = useSearchParams();
     const token = searchParams.get('token') ?? '';
 
@@ -37,28 +35,20 @@ export function ResetPassword() {
     const [success, setSuccess] = useState(false);
 
 
-    async function onSubmit(data: ResetPasswordForm) {
-        try {
-            setIsLoading(true);
-            setAlert(false);
-            await resetPassword({ token: token, new_password: data.password })
-                .then((response) => {
-                    if (response) {
-                        setSuccess(true);
-                        setTimeout(() => {
-                            navigate('/login');
-                        }, 3000);
-                    } else {
-                        setAlert(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-        }
+    function onSubmit(data: ResetPasswordForm) {
+        setIsLoading(true);
+        setAlert(false);
+        setSuccess(false);
+        resetPassword({ new_password: data.password, token: token})
+            .then(() => {
+                setSuccess(true);
+            })
+            .catch(() => {
+                setAlert(true);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
     const [showPassword, setShowPassword] = useState(false);
@@ -66,7 +56,7 @@ export function ResetPassword() {
 
 
     return (
-        <LayoutAuth>
+        <LayoutNoAuth>
             <Typography variant="h4">Recupere sua senha</Typography>
             <Divider />
             <Box
@@ -127,6 +117,6 @@ export function ResetPassword() {
                 </Button>
             </Box>
             <Typography align="center"><Link href='/login'>Voltar ao Login</Link></Typography>
-        </LayoutAuth>
+        </LayoutNoAuth>
     );
 }

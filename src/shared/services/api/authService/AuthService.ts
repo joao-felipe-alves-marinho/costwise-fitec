@@ -41,72 +41,45 @@ function setRefreshToken(token: string) {
 }
 
 export async function refresh(data: RefreshData) {
-    try {
-        const response: Response = await axios.put('/tokens', data);
-        if (response.status === 200) {
-            setAccessToken(response.data.access_token);
-            Api.defaults.headers.Authorization = `Bearer ${getAccessToken()}`;
-
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await axios.put(`${import.meta.env.VITE_API_URL}/tokens`, data)
+        .then((response: Response) => {
+            if (response.status === 200) {
+                setAccessToken(response.data.access_token);
+                Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
 }
 
 export async function login(data: LoginData) {
-    try {
-        const response: Response = await Api.post('/tokens', {}, { auth: data });
-        if (response.status === 200) {
-            setAccessToken(response.data.access_token);
-            setRefreshToken(response.data.refresh_token);
-            Api.defaults.headers.Authorization = `Bearer ${getAccessToken()}`;
-            return true;
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await Api.post('/tokens', {}, { auth: data })
+        .then((response: Response) => {
+            if (response.status === 200) {
+                setAccessToken(response.data.access_token);
+                setRefreshToken(response.data.refresh_token);
+                Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
+            }
+        });
 }
 
 export async function logout() {
-    try {
-        const response = await Api.delete('/tokens');
-        if (response.status === 204) {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            delete Api.defaults.headers.Authorization;
-            return true;
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await Api.delete('/tokens')
+        .then((response) => {
+            if (response.status === 204) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                delete Api.defaults.headers.Authorization;
+            }
+        });
 }
 
 export async function requestResetPassword(data: RequestResetPasswordData) {
-    try {
-        const response = await Api.post('/tokens/reset', data).catch(() => { return { 'status': 404 }; });
-        if (response.status === 204) {
-            return true;
-        }
-        if (response.status === 404) {
-            return false;
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await Api.post('/tokens/reset', data);
 }
 
 export async function resetPassword(data: ResetPasswordData) {
-    try {
-        const response = await Api.put('/tokens/reset', data).catch(() => { return { 'status': 400 }; });
-        if (response.status === 204) {
-            return true;
-        }
-        if (response.status === 400) {
-            return false;
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await Api.put('/tokens/reset', data);
 }
 
 export function isAuthenticated() {
