@@ -31,7 +31,7 @@ export default function LayoutAuth() {
     }
 
     return (
-        <Box height='100vh' width='100%' display='flex' flexDirection='column' gap={2}>
+        <Box height='100vh' width='100%' display='flex' flexDirection='column'>
             <AppBar position='static' color='primary' enableColorOnDark>
                 <Toolbar
                     disableGutters
@@ -42,7 +42,7 @@ export default function LayoutAuth() {
                 >
                     <Typography variant='h4'>LOGO</Typography>
                     <Box display='flex' alignItems='center' >
-                        <Typography variant='h5'>{user.username}</Typography>
+                        <Typography variant='h5'>{user ? user.username : 'null'}</Typography>
                         <IconButton
                             onClick={handleClick}
                             size='large'
@@ -66,8 +66,8 @@ export default function LayoutAuth() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Box flex={1} overflow='auto'>
-                <Outlet />
+            <Box flex={1} overflow='auto' m={8} >
+                <Outlet context={user satisfies User} />
             </Box>
         </Box>
     );

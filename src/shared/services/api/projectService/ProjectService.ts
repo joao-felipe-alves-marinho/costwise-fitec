@@ -1,12 +1,6 @@
-import { Project } from '../../../types/Types';
+import { Project, ProjectData } from '../../../types/Types';
 import { Api } from '../Api';
 
-type ProjectData = Pick<Project,
-    'name_project' |
-    'description_project' |
-    'deadline' |
-    'budget' |
-    'expected_budget'>
 
 interface MembersCosts {
     Members: [{

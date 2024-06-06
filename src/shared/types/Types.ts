@@ -8,11 +8,11 @@ export interface User {
 export interface Project {
     id: number;
     name_project: string;
-    description_project: string | null;
-    deadline: string | null;
+    description_project?: string | undefined;
+    deadline: string | undefined;
     created_at: string | null;
     budget: number | null;
-    expected_budget: number;
+    expected_budget?: number | undefined;
     total_cost_products: number | null;
     total_cost_members: number | null;
     owner: Pick<User, 'username' | 'email'>;
@@ -21,6 +21,12 @@ export interface Project {
     members: Pick<Member, 'id' | 'name_member'>[];
     products: Pick<Product, 'id' | 'name_product'>[];
 }
+
+export type ProjectData = Pick<Project,
+    'name_project' |
+    'description_project' |
+    'deadline' |
+    'expected_budget'>
 
 interface FromProject {
     project_id: number;

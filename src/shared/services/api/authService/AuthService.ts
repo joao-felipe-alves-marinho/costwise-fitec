@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Api } from '../Api';
 
 interface RefreshData {
@@ -47,8 +47,12 @@ export async function refresh(data: RefreshData) {
                 setAccessToken(response.data.access_token);
                 Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
             }
-        }).catch((error) => {
-            console.error(error);
+        }).catch((error: AxiosError ) => {
+            if (error.response?.status === 401) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                delete Api.defaults.headers.common.Authorization;
+            }
         });
 }
 
@@ -59,6 +63,7 @@ export async function login(data: LoginData) {
                 setAccessToken(response.data.access_token);
                 setRefreshToken(response.data.refresh_token);
                 Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
+
             }
         });
 }

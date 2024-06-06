@@ -12,7 +12,7 @@ export const Api = axios.create({
 Api.interceptors.response.use(
     function (response) { return response; },
     async function (error: AxiosError) {
-        if (error.status !== 401) {
+        if (error.status !== 401 || error.config?.url === '/tokens') {
             if (error.config?.url === `${import.meta.env.VITE_API_URL}/tokens`) {
                 return Promise.reject(error);
             }

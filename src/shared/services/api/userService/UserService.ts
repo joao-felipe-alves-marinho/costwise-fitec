@@ -1,6 +1,7 @@
 import { User } from '../../../types/Types';
 import { Api } from '../Api';
 
+type UserData = Omit<User, 'id' | 'projects' >;
 
 export async function getUsers(): Promise<User[] | null> {
     return await Api.get('/users').then((response) => {
@@ -38,7 +39,7 @@ export async function getMe(): Promise<User | null> {
     });
 }
 
-export async function createUser(data: Omit<User, 'id'>): Promise<User | null> {
+export async function createUser(data: UserData): Promise<User | null> {
     return await Api.post('/users', data).then((response) => {
         if (response.status !== 201) {
             return null;
@@ -50,7 +51,7 @@ export async function createUser(data: Omit<User, 'id'>): Promise<User | null> {
     });
 }
 
-export async function updateUser(data: Partial<User>): Promise<User | null> {
+export async function updateUser(data: Partial<UserData>): Promise<User | null> {
     return await Api.put('/users', data).then((response) => {
         if (response.status !== 200) {
             return null;
