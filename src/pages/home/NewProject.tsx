@@ -4,8 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { ProjectData } from '../../shared/types/Types';
+import { Project, ProjectData, User } from '../../shared/types/Types';
 import { createProject } from '../../shared/services/api/projectService/ProjectService';
+
+interface setUserProps {
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
 
 const NewProjectSchema = yup.object({
     name_project: yup.string().required('Esse campo é obrigatório.').min(5, 'O nome do projeto deve ter pelo menos 5 caracteres.').max(255, 'O nome do projeto deve ter no máximo 255 caracteres.'),
@@ -14,7 +18,7 @@ const NewProjectSchema = yup.object({
     expected_budget: yup.number().min(0, 'O orçamento esperado deve ser maior ou igual a 0.'),
 });
 
-export default function NewProject() {
+export default function NewProject(props: setUserProps) {
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_project: '',
@@ -33,14 +37,26 @@ export default function NewProject() {
         setIsLoading(true);
         setSuccess(false);
         createProject(data)
-            .then(() => {
+            .then((response: Project | null) => {
                 setSuccess(true);
+                props.setUser((oldUser) => {
+                    if (oldUser && response) {
+                        return {
+                            ...oldUser,
+                            projects: [...oldUser.projects, response]
+                        };
+                    }
+                    return null;
+
+                })
             })
             .catch(() => {
-                setSuccess(false);
+                console.error('Erro ao criar novo projeto.');
             })
             .finally(() => {
                 setIsLoading(false);
+                setSuccess(false);
+
             });
     }
 
@@ -49,6 +65,9 @@ export default function NewProject() {
     function toggleOpen() {
         setOpen(oldOpen => !oldOpen);
     }
+
+
+
     return (
         <>
             <Fab variant='extended' color='primary' onClick={toggleOpen} >
@@ -99,14 +118,15 @@ export default function NewProject() {
                             helperText={errors.expected_budget?.message}
                             disabled={isLoading || success}
                             label='Orçamento Esperado'
+                            type='number'
                             placeholder='1000'
                             fullWidth
                         />
                     </Stack>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={toggleOpen} type='submit' >
-                        Agree
+                    <Button onClick={toggleOpen} type='submit' disabled={!isDirty || !isValid} >
+                        Criar novo projeto
                     </Button>
                 </DialogActions>
             </Dialog>
