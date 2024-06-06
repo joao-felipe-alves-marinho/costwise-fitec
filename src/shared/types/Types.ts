@@ -5,6 +5,11 @@ export interface User {
     projects: Pick<Project, 'id' | 'name_project'>[]
 }
 
+export interface UserContext {
+    user?: User | null;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
+
 export interface Project {
     id: number;
     name_project: string;

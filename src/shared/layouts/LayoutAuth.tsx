@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { AppBar, Box, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 
+import { User, UserContext } from '../types/Types';
 import { logout } from '../services/api/authService/AuthService';
-import { User } from '../types/Types';
+
 
 export default function LayoutAuth() {
-    const user = useLoaderData() as User;
+    const [user, setUser] = useState<User | null>(useLoaderData() as User);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -67,7 +68,7 @@ export default function LayoutAuth() {
                 </Toolbar>
             </AppBar>
             <Box flex={1} overflow='auto' m={8} >
-                <Outlet context={user satisfies User} />
+                <Outlet context={{ user, setUser } satisfies UserContext} />
             </Box>
         </Box>
     );

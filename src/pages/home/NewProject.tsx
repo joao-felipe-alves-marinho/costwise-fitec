@@ -4,12 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Project, ProjectData, User } from '../../shared/types/Types';
+import { Project, ProjectData, UserContext } from '../../shared/types/Types';
 import { createProject } from '../../shared/services/api/projectService/ProjectService';
-
-interface setUserProps {
-    setUser: React.Dispatch<React.SetStateAction<User | null>>;
-}
 
 const NewProjectSchema = yup.object({
     name_project: yup.string().required('Esse campo é obrigatório.').min(5, 'O nome do projeto deve ter pelo menos 5 caracteres.').max(255, 'O nome do projeto deve ter no máximo 255 caracteres.'),
@@ -18,7 +14,7 @@ const NewProjectSchema = yup.object({
     expected_budget: yup.number().min(0, 'O orçamento esperado deve ser maior ou igual a 0.'),
 });
 
-export default function NewProject(props: setUserProps) {
+export default function NewProject(props: UserContext) {
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_project: '',
@@ -47,7 +43,6 @@ export default function NewProject(props: setUserProps) {
                         };
                     }
                     return null;
-
                 })
             })
             .catch(() => {
@@ -92,6 +87,7 @@ export default function NewProject(props: setUserProps) {
                             disabled={isLoading || success}
                             label='Nome do Projeto'
                             placeholder='Projeto 1'
+                            required
                             fullWidth
                         />
                         <TextField
@@ -110,6 +106,7 @@ export default function NewProject(props: setUserProps) {
                             disabled={isLoading || success}
                             label='Prazo do Projeto'
                             placeholder='YYYY-MM-DD'
+                            required
                             fullWidth
                         />
                         <TextField
