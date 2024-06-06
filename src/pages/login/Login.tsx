@@ -42,9 +42,7 @@ export function Login() {
         login(data)
             .then(() => {
                 setSuccess(true);
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
+                navigate('/');
             })
             .catch(() => {
                 setAlert(true);

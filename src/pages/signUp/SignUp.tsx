@@ -41,7 +41,12 @@ export function SignUp() {
     function onSubmit(data: SignUpForm) {
         setIsLoading(true);
         setAlert(false);
-        createUser(data)
+        createUser({
+            username: data.username,
+            email: data.email,
+            password: data.password
+        }
+        )
             .then(() => {
                 navigate('/login');
             })

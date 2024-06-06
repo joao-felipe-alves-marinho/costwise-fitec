@@ -43,7 +43,7 @@ export default function NewProject(props: UserContext) {
                         };
                     }
                     return null;
-                })
+                });
             })
             .catch(() => {
                 console.error('Erro ao criar novo projeto.');

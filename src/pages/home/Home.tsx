@@ -6,7 +6,7 @@ import ProjectCard from './ProjectCard';
 import NewProject from './NewProject';
 
 export function Home() {
-    const { user, setUser } = useOutletContext() as UserContext;
+    const { user, setUser } = useOutletContext<UserContext>();
 
     return (
         <Stack spacing={4} >
@@ -20,7 +20,7 @@ export function Home() {
             </Box>
             <Stack spacing={2} >
                 {user?.projects.length ?? 0 > 0 ? user?.projects.map(project => (
-                    <ProjectCard key={project.id} {...project} />
+                    <ProjectCard key={project.id} {...project} user={user} setUser={setUser} />
                 )) : <Typography variant='h5' align='center' >Nenhum projeto criado</Typography>}
             </Stack >
         </Stack>

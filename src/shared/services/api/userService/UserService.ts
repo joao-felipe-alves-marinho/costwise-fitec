@@ -1,7 +1,8 @@
+import { AxiosError } from 'axios';
 import { User } from '../../../types/Types';
 import { Api } from '../Api';
 
-type UserData = Omit<User, 'id' | 'projects' >;
+type UserData = Omit<User, 'id' | 'projects'> & { password: string };
 
 export async function getUsers(): Promise<User[] | null> {
     return await Api.get('/users').then((response) => {
@@ -29,9 +30,6 @@ export async function getUser(id: string): Promise<User | null> {
 
 export async function getMe(): Promise<User | null> {
     return await Api.get('/users/me').then((response) => {
-        if (response.status !== 200) {
-            return null;
-        }
         return response.data as User;
     }).catch((error) => {
         console.error(error);
@@ -39,15 +37,11 @@ export async function getMe(): Promise<User | null> {
     });
 }
 
-export async function createUser(data: UserData): Promise<User | null> {
+export async function createUser(data: UserData): Promise<User | AxiosError> {
     return await Api.post('/users', data).then((response) => {
-        if (response.status !== 201) {
-            return null;
-        }
         return response.data as User;
-    }).catch((error) => {
-        console.error(error);
-        return null;
+    }).catch((error: AxiosError) => {
+        throw error;
     });
 }
 

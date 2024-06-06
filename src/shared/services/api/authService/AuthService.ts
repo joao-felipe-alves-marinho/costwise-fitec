@@ -28,30 +28,17 @@ interface Response {
     };
 }
 
-function getAccessToken() {
-    return localStorage.getItem('access_token');
-}
-
-function setAccessToken(token: string) {
-    localStorage.setItem('access_token', token);
-}
-
-function setRefreshToken(token: string) {
-    localStorage.setItem('refresh_token', token);
-}
 
 export async function refresh(data: RefreshData) {
     await axios.put(`${import.meta.env.VITE_API_URL}/tokens`, data)
         .then((response: Response) => {
             if (response.status === 200) {
-                setAccessToken(response.data.access_token);
-                Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
+                localStorage.setItem('access_token', response.data.access_token);
+                Api.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
             }
         }).catch((error: AxiosError ) => {
             if (error.response?.status === 401) {
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('refresh_token');
-                delete Api.defaults.headers.common.Authorization;
+                console.error('Token inválido.');
             }
         });
 }
@@ -60,9 +47,9 @@ export async function login(data: LoginData) {
     await Api.post('/tokens', {}, { auth: data })
         .then((response: Response) => {
             if (response.status === 200) {
-                setAccessToken(response.data.access_token);
-                setRefreshToken(response.data.refresh_token);
-                Api.defaults.headers.common.Authorization = `Bearer ${getAccessToken()}`;
+                localStorage.setItem('access_token', response.data.access_token);
+                localStorage.setItem('refresh_token', response.data.refresh_token);
+                Api.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
 
             }
         });
@@ -88,5 +75,5 @@ export async function resetPassword(data: ResetPasswordData) {
 }
 
 export function isAuthenticated() {
-    return getAccessToken() !== null;
+    return localStorage.getItem('access_token') !== null;
 }
