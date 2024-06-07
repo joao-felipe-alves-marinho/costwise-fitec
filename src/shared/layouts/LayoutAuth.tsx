@@ -43,7 +43,7 @@ export default function LayoutAuth() {
                 >
 
                     <ButtonBase onClick={() => (navigate('/'))} >
-                        <Typography variant='h4'>LOGO</Typography>
+                        <img src='/logo.png' alt='logo' height='56'/>
                     </ButtonBase>
                     <Box display='flex' alignItems='center' >
                         <Typography variant='h5'>{user ? user.username : 'null'}</Typography>
