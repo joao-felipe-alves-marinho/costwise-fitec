@@ -1,10 +1,10 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import { Home, Login, RequestResetPassword, ResetPassword, SignUp } from '../pages';
+import { Home, Login, ProjectIndex, ProjectPage, ProjectTask, RequestResetPassword, ResetPassword, SignUp } from '../pages';
 import LayoutAuth from '../shared/layouts/LayoutAuth';
 import ProtectedRoutes from './ProtectedRoutes';
 import NoAuthRoutes from './NoAuthRoutes';
-import { UserLoader } from '../shared/loaders';
+import { ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
 
 
 const router = createBrowserRouter([
@@ -46,15 +46,23 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/project/:id',
+                        element: <ProjectPage />,
+                        loader: ({ params }) => ProjectLoader(parseInt(params.id ?? '')),
                         children: [
                             {
-                                path: '/project/:id/products',
+                                path: '/project/:id/',
+                                element: <ProjectIndex />
+                            },
+                            {
+                                path: '/project/:id/tasks',
+                                loader: ({ params }) => TasksLoader(parseInt(params.id ?? '')),
+                                element: <ProjectTask />
                             },
                             {
                                 path: '/project/:id/members',
                             },
                             {
-                                path: '/project/:id/tasks',
+                                path: '/project/:id/products',
                             },
                             {
                                 path: '/project/:id/budget',

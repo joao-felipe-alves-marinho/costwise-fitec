@@ -33,19 +33,36 @@ export type ProjectData = Pick<Project,
     'deadline' |
     'expected_budget'>
 
+export interface ProjectContext {
+    project: Project | null;
+    setProject: React.Dispatch<React.SetStateAction<Project | null>>;
+}
+
 interface FromProject {
     project_id: number;
     project: Pick<Project, 'name_project' | 'user_id'>;
 }
 
 export interface Task extends FromProject {
+    task_id: number;
     id: number;
     name_task: string;
-    description_task: string | null;
+    description_task?: string | null;
     deadline: string | null;
     created_at: string | null;
     members: Pick<Member, 'id' | 'name_member' | 'role'>[];
 }
+
+export interface TaskContext {
+    tasks: Task[] | null;
+    setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}
+
+export type TaskData = Pick<Task,
+    'name_task' |
+    'description_task' |
+    'deadline'
+>
 
 export interface Member extends FromProject {
     id: number;

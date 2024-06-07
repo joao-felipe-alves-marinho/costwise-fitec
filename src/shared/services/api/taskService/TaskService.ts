@@ -28,8 +28,8 @@ export async function getTask(project_id: number, task_id: number): Promise<Task
 }
 
 
-export async function createTask(project_id: number, task_id: number, data: TaskData): Promise<Task | null> {
-    return await Api.post(`projects/${project_id}/tasks/${task_id}`, data).then((response) => {
+export async function createTask(project_id: number, data: TaskData): Promise<Task | null> {
+    return await Api.post(`projects/${project_id}/tasks`, data).then((response) => {
         if (response.status !== 201) {
             return null;
         }

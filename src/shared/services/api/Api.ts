@@ -15,15 +15,18 @@ Api.interceptors.request.use((config) => {
 Api.interceptors.response.use(
     function (response) { return response; },
     async function (error: AxiosError) {
-        if (error.response?.status !== 401 || error.config?.url === '/tokens') {
+        if (error.response?.status !== 401) {
             return Promise.reject(error);
         }
         refresh({
-            access_token: localStorage.getItem('access_token') ?? '',
-            refresh_token: localStorage.getItem('refresh_token') ?? ''
-        }).then(() => {
-            if (error.config) return Api.request(error.config);
+            access_token: localStorage.getItem('access_token')!,
+            refresh_token: localStorage.getItem('refresh_token')!
+        }).then((response) => {
+            if (response) {
+                if (error.config) return Api.request(error.config);
+            }
         }).catch(() => {
             console.error('Erro refresh token.');
+            return Promise.reject(error);
         });
     });

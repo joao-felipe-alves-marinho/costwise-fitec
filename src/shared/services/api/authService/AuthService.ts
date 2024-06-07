@@ -30,16 +30,15 @@ interface Response {
 
 
 export async function refresh(data: RefreshData) {
-    await axios.put(`${import.meta.env.VITE_API_URL}/tokens`, data)
+    return await axios.put(`${import.meta.env.VITE_API_URL}/tokens`, data)
         .then((response: Response) => {
             if (response.status === 200) {
                 localStorage.setItem('access_token', response.data.access_token);
                 Api.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
+                return true;
             }
-        }).catch((error: AxiosError ) => {
-            if (error.response?.status === 401) {
-                console.error('Token inválido.');
-            }
+        }).catch((error: AxiosError) => {
+            console.error(error);
         });
 }
 

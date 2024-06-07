@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AppBar, Box, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, ButtonBase, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 
 import { User, UserContext } from '../types/Types';
@@ -41,7 +41,10 @@ export default function LayoutAuth() {
                     justifyContent='space-between'
                     px={2}
                 >
-                    <Typography variant='h4'>LOGO</Typography>
+
+                    <ButtonBase onClick={() => (navigate('/'))} >
+                        <Typography variant='h4'>LOGO</Typography>
+                    </ButtonBase>
                     <Box display='flex' alignItems='center' >
                         <Typography variant='h5'>{user ? user.username : 'null'}</Typography>
                         <IconButton
@@ -67,7 +70,7 @@ export default function LayoutAuth() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Box flex={1} overflow='auto' m={8} >
+            <Box flex={1} overflow='auto' mx={8} >
                 <Outlet context={{ user, setUser } satisfies UserContext} />
             </Box>
         </Box>

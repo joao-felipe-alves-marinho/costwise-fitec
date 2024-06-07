@@ -4,3 +4,6 @@ export * from './requestResetPassword/RequestResetPassword';
 export * from './resetPassword/ResetPassword';
 
 export * from './home/Home';
+export * from './project/ProjectPage';
+export * from './project/ProjectIndex';
+export * from './project/projectTask/ProjectTask';

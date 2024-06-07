@@ -9,7 +9,7 @@ export function Home() {
     const { user, setUser } = useOutletContext<UserContext>();
 
     return (
-        <Stack spacing={4} >
+        <Stack spacing={4} mt={8}>
             <Box
                 display='flex'
                 alignItems='center'
