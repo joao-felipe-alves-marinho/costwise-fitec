@@ -86,7 +86,7 @@ export type MemberData = Pick<Member,
 export interface Product extends FromProject {
     id: number;
     name_product: string;
-    description_product?: string | null ;
+    description_product?: string | null;
     type: string;
     license: boolean;
     cost: number;
@@ -106,3 +106,29 @@ export type ProductData = Pick<Product,
     'cost' |
     'amount'
 >
+
+interface MembersCosts {
+    Members: [{
+        member: string;
+        total_cost: number;
+    }]
+}
+
+interface ProductByTypeCost {
+    HARDWARE: number;
+    SOFTWARE: number;
+    OTHER: number;
+}
+
+interface ProductByLicenseCost {
+    license_cost: number;
+    no_license_cost: number;
+}
+
+
+export interface Budget {
+    project: Project;
+    totalCostMembers: MembersCosts;
+    totalCostProductsType: ProductByTypeCost;
+    totalCostProductsLicense: ProductByLicenseCost;
+}

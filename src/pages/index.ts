@@ -9,3 +9,4 @@ export * from './project/ProjectIndex';
 export * from './project/projectTask/ProjectTask';
 export * from './project/projectMember/ProjectMember';
 export * from './project/projectProduct/ProjectProduct';
+export * from './project/projectBudget/ProjectBudget';

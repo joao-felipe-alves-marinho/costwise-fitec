@@ -1,11 +1,12 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import { Home, Login, ProjectIndex, ProjectPage, ProjectProduct, ProjectTask, RequestResetPassword, ResetPassword, SignUp } from '../pages';
+import { Home, Login, ProjectBudget, ProjectIndex, ProjectPage, ProjectProduct, ProjectTask, RequestResetPassword, ResetPassword, SignUp } from '../pages';
 import LayoutAuth from '../shared/layouts/LayoutAuth';
 import ProtectedRoutes from './ProtectedRoutes';
 import NoAuthRoutes from './NoAuthRoutes';
 import { MembersLoader, ProductsLoader, ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
 import { ProjectMember } from '../pages/project/projectMember/ProjectMember';
+import { BudgetLoader } from '../shared/loaders/BudgetLoader';
 
 
 const router = createBrowserRouter([
@@ -71,6 +72,8 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: '/project/:id/budget',
+                                loader: ({ params }) => BudgetLoader(parseInt(params.id ?? '')),
+                                element: <ProjectBudget />
                             },
                         ]
                     },

@@ -78,6 +78,7 @@ export function ProjectPage() {
                         variant='fullWidth'
                         aria-label="nav tabs example"
                         role="navigation"
+                        sx={{ mb: 4}}
                     >
                         <LinkTab label='Descrição' href={`/project/${project.id}`} />
                         <LinkTab label='Tarefas' href={`/project/${project.id}/tasks`} />
