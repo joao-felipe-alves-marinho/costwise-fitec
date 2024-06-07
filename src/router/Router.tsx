@@ -4,7 +4,8 @@ import { Home, Login, ProjectIndex, ProjectPage, ProjectTask, RequestResetPasswo
 import LayoutAuth from '../shared/layouts/LayoutAuth';
 import ProtectedRoutes from './ProtectedRoutes';
 import NoAuthRoutes from './NoAuthRoutes';
-import { ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
+import { MembersLoader, ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
+import { ProjectMember } from '../pages/project/projectMember/ProjectMember';
 
 
 const router = createBrowserRouter([
@@ -60,6 +61,8 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: '/project/:id/members',
+                                loader: ({ params }) => MembersLoader(parseInt(params.id ?? '')),
+                                element: <ProjectMember />
                             },
                             {
                                 path: '/project/:id/products',

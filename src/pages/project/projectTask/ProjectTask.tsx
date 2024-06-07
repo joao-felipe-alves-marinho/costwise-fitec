@@ -34,7 +34,7 @@ export function ProjectTask() {
                             <TableRow key={task.id}>
                                 <TableCell>{task.name_task}</TableCell>
                                 <TableCell>{task.deadline}</TableCell>
-                                <TableCell>{task.members.length > 0 ? task.members.join(', ') : 'Nenhum membro na tarefa'}</TableCell>
+                                <TableCell>{task.members.map(member => member.name_member).join(', ') || 'Nenhuma tarefa para o membro'}</TableCell>
                                 <TableCell align='center'>
                                     <AssignMember task_id={task.id} tasks={tasks} setTasks={setTasks} />
                                 </TableCell>

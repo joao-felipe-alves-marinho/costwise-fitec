@@ -30,8 +30,8 @@ export async function getMember(project_id: number, member_id: number): Promise<
     });
 }
 
-export async function createMember(project_id: number, member_id: number, data: MemberData): Promise<Member | null> {
-    return await Api.post(`projects/${project_id}/members/${member_id}`, data).then((response) => {
+export async function createMember(project_id: number, data: MemberData): Promise<Member | null> {
+    return await Api.post(`projects/${project_id}/members`, data).then((response) => {
         if (response.status !== 201) {
             return null;
         }
@@ -63,7 +63,7 @@ export async function deleteMember(project_id: number, member_id: number): Promi
         });
 }
 
-export async function assignMember(project_id: number, member_id: number, task_id: number): Promise<Member | null> {
+export async function assignTask(project_id: number, member_id: number, task_id: number): Promise<Member | null> {
     return await Api.put(`projects/${project_id}/members/${member_id}/${task_id}`).then((response) => {
         if (response.status !== 200) {
             return null;

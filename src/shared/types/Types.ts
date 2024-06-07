@@ -72,6 +72,17 @@ export interface Member extends FromProject {
     tasks: Pick<Task, 'id' | 'name_task'>[]
 }
 
+export interface MemberContext {
+    members: Member[] | null;
+    setMembers: React.Dispatch<React.SetStateAction<Member[]>>;
+}
+
+export type MemberData = Pick<Member,
+    'name_member' |
+    'role' |
+    'salary'
+>
+
 export interface Product extends FromProject {
     id: number;
     name_product: string;
