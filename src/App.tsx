@@ -1,10 +1,14 @@
-import { TextField } from '@mui/material'
+import { RouterProvider } from 'react-router-dom';
+
+import router from './router/Router';
 
 function App() {
 
-  return (
-    <TextField label="Name" />
-  )
+    return (
+        <>
+            <RouterProvider router={router} />
+        </>
+    );
 }
 
-export default App
+export default App;
