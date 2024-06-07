@@ -33,8 +33,8 @@ export async function getProduct(project_id: number, product_id: number): Promis
     });
 }
 
-export async function createProduct(project_id: number, product_id: number, data: ProductData): Promise<Product | null> {
-    return await Api.post(`projects/${project_id}/products/${product_id}`, data).then((response) => {
+export async function createProduct(project_id: number, data: ProductData): Promise<Product | null> {
+    return await Api.post(`projects/${project_id}/products`, data).then((response) => {
         if (response.status !== 200) {
             return null;
         }

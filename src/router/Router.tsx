@@ -1,10 +1,10 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-import { Home, Login, ProjectIndex, ProjectPage, ProjectTask, RequestResetPassword, ResetPassword, SignUp } from '../pages';
+import { Home, Login, ProjectIndex, ProjectPage, ProjectProduct, ProjectTask, RequestResetPassword, ResetPassword, SignUp } from '../pages';
 import LayoutAuth from '../shared/layouts/LayoutAuth';
 import ProtectedRoutes from './ProtectedRoutes';
 import NoAuthRoutes from './NoAuthRoutes';
-import { MembersLoader, ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
+import { MembersLoader, ProductsLoader, ProjectLoader, TasksLoader, UserLoader } from '../shared/loaders';
 import { ProjectMember } from '../pages/project/projectMember/ProjectMember';
 
 
@@ -66,6 +66,8 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: '/project/:id/products',
+                                loader: ({ params }) => ProductsLoader(parseInt(params.id ?? '')),
+                                element: <ProjectProduct />
                             },
                             {
                                 path: '/project/:id/budget',

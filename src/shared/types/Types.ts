@@ -86,9 +86,23 @@ export type MemberData = Pick<Member,
 export interface Product extends FromProject {
     id: number;
     name_product: string;
-    description_product: string | null;
-    type: 'HARDWARE' | 'SOFTWARE' | 'OTHER';
+    description_product?: string | null ;
+    type: string;
     license: boolean;
     cost: number;
     amount: number;
 }
+
+export interface ProductContext {
+    products: Product[] | null;
+    setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+}
+
+export type ProductData = Pick<Product,
+    'name_product' |
+    'description_product' |
+    'type' |
+    'license' |
+    'cost' |
+    'amount'
+>
