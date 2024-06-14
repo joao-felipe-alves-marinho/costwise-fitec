@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { useLoaderData, useNavigation } from 'react-router-dom';
+import { Box, LinearProgress, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import { Task } from '../../../shared/types/Types';
 import NewTask from './NewTask';
@@ -10,6 +10,12 @@ import EditTask from './EditTask';
 
 export function ProjectTask() {
     const [tasks, setTasks] = useState<Task[]>(useLoaderData() as Task[]);
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Stack spacing={4}>

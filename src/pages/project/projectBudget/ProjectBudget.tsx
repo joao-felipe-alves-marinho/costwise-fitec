@@ -1,6 +1,6 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material';
 import { BarChart, Gauge, gaugeClasses } from '@mui/x-charts';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigation } from 'react-router-dom';
 import { Budget } from '../../../shared/types/Types';
 
 
@@ -10,6 +10,12 @@ export function ProjectBudget() {
     const totalCostMembers = budgets.totalCostMembers;
     const totalCostProductsType = budgets.totalCostProductsType;
     const totalCostProductsLicense = budgets.totalCostProductsLicense;
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Grid container spacing={4}>

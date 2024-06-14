@@ -1,5 +1,5 @@
-import { Box, Divider, Grid, Paper, Stack, TextField, Typography } from '@mui/material';
-import { useOutletContext } from 'react-router-dom';
+import { Box, Divider, Grid, LinearProgress, Paper, Stack, TextField, Typography } from '@mui/material';
+import { useNavigation, useOutletContext } from 'react-router-dom';
 import { ProjectContext } from '../../shared/types/Types';
 import ProjectEdit from './ProjectEdit';
 import ProjectDelete from './ProjectDelete';
@@ -10,6 +10,12 @@ export function ProjectIndex() {
     function formatDate(date: string) {
         const parts = date.split('-');
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
     }
 
     return (
