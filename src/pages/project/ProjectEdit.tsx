@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { ProjectContext, ProjectData } from '../../shared/types/Types';
 import { updateProject } from '../../shared/services/api/projectService/ProjectService';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
 const UpdateProjectSchema = yup.object({
     name_project: yup.string().min(5, 'O nome do projeto deve ter pelo menos 5 caracteres.').max(255, 'O nome do projeto deve ter no máximo 255 caracteres.'),
@@ -15,7 +17,7 @@ const UpdateProjectSchema = yup.object({
 });
 
 export default function ProjectEdit(props: ProjectContext) {
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
+    const { register, control, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_project: props.project?.name_project,
             description_project: props.project?.description_project,
@@ -32,6 +34,23 @@ export default function ProjectEdit(props: ProjectContext) {
     function onSubmit(data: Partial<ProjectData>) {
         setIsLoading(true);
         setSuccess(false);
+        if (data.deadline) {
+            const deadlineFormat = format(new Date(data.deadline), 'yyyy-MM-dd');
+            if (props.project?.id) {
+                updateProject(props.project.id, {...data, deadline: deadlineFormat})
+                    .then((response) => {
+                        setSuccess(true);
+                        props.setProject(response);
+                    })
+                    .catch(() => {
+                        console.error('Erro ao criar novo projeto.');
+                    })
+                    .finally(() => {
+                        setIsLoading(false);
+                        setSuccess(false);
+                    });
+            }
+        }
         if (props.project?.id) {
             updateProject(props.project.id, data)
                 .then((response) => {
@@ -89,14 +108,30 @@ export default function ProjectEdit(props: ProjectContext) {
                             fullWidth
                             multiline
                         />
-                        <TextField
-                            {...register('deadline')}
-                            error={!!errors.deadline}
-                            helperText={errors.deadline?.message}
-                            disabled={isLoading || success}
-                            label='Prazo do Projeto'
-                            placeholder='YYYY-MM-DD'
-                            fullWidth
+                        <Controller
+                            control={control}
+                            name='deadline'
+                            render={({ field }) => {
+                                return (
+                                    <DatePicker
+                                        label='Prazo do Projeto'
+                                        disablePast
+                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                        value={field.value ? new Date(field.value) : null}
+                                        inputRef={field.ref}
+                                        onChange={(date) => {
+                                            field.onChange(date);
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                required: true,
+                                                error: !!errors.deadline,
+                                                helperText: errors.deadline?.message,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                         <TextField
                             {...register('expected_budget')}

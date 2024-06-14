@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Stack, Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { useLoaderData } from 'react-router-dom';
+import { Stack, Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, LinearProgress } from '@mui/material';
+import { useLoaderData, useNavigation } from 'react-router-dom';
 
 import { Product } from '../../../shared/types/Types';
 import NewProduct from './NewProduct';
@@ -9,6 +9,12 @@ import RemoveProduct from './RemoveProduct';
 
 export function ProjectProduct() {
     const [products, setProducts] = useState<Product[]>(useLoaderData() as Product[]);
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Stack spacing={4}>

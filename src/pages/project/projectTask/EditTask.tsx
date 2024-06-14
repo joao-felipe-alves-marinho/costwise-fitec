@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Fab, Icon, Stack, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { TaskContext, TaskData } from '../../../shared/types/Types';
 import { updateTask } from '../../../shared/services/api/taskService/TaskService';
 import { useParams } from 'react-router-dom';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
 interface TaskProps extends TaskContext {
     task_id: number;
@@ -22,7 +24,7 @@ const EditTaskSchema = yup.object({
 });
 
 export default function EditTask(props: TaskProps) {
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
+    const { register, control, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_task: props.name_task,
             description_task: props.description_task,
@@ -42,6 +44,23 @@ export default function EditTask(props: TaskProps) {
     function onSubmit(data: Partial<TaskData>) {
         setIsLoading(true);
         setSuccess(false);
+        if (data.deadline) {
+            const deadlineFormat = format(new Date(data.deadline), 'yyyy-MM-dd');
+            if (props.task_id) {
+                updateTask(project_id, props.task_id, { ...data, deadline: deadlineFormat })
+                    .then(() => {
+                        setSuccess(true);
+                        window.location.reload();
+                    })
+                    .catch(() => {
+                        console.error('Erro ao criar nova tarefa.');
+                    })
+                    .finally(() => {
+                        setIsLoading(false);
+                        setSuccess(false);
+                    });
+            }
+        }
         updateTask(project_id, props.task_id, data)
             .then(() => {
                 setSuccess(true);
@@ -96,14 +115,30 @@ export default function EditTask(props: TaskProps) {
                             placeholder='Descrição da Tarefa 1'
                             fullWidth
                         />
-                        <TextField
-                            {...register('deadline')}
-                            error={!!errors.deadline}
-                            helperText={errors.deadline?.message}
-                            disabled={isLoading || success}
-                            label='Prazo da Tarefa'
-                            placeholder='YYYY-MM-DD'
-                            fullWidth
+                        <Controller
+                            control={control}
+                            name='deadline'
+                            render={({ field }) => {
+                                return (
+                                    <DatePicker
+                                        label='Prazo da Tarefa'
+                                        disablePast
+                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                        value={field.value ? new Date(field.value) : null}
+                                        inputRef={field.ref}
+                                        onChange={(date) => {
+                                            field.onChange(date);
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                required: true,
+                                                error: !!errors.deadline,
+                                                helperText: errors.deadline?.message,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                     </Stack>
                 </DialogContent>

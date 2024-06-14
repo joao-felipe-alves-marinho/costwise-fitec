@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { useLoaderData, useNavigation } from 'react-router-dom';
+import { Box, LinearProgress, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import { Task } from '../../../shared/types/Types';
 import NewTask from './NewTask';
@@ -10,6 +10,12 @@ import EditTask from './EditTask';
 
 export function ProjectTask() {
     const [tasks, setTasks] = useState<Task[]>(useLoaderData() as Task[]);
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Stack spacing={4}>
@@ -33,7 +39,7 @@ export function ProjectTask() {
                         {tasks.map((task) => (
                             <TableRow key={task.id}>
                                 <TableCell>{task.name_task}</TableCell>
-                                <TableCell>{task.deadline}</TableCell>
+                                <TableCell>{task.deadline?.split('-').reverse().join('/')}</TableCell>
                                 <TableCell>{task.members.map(member => member.name_member).join(', ') || 'Nenhuma tarefa para o membro'}</TableCell>
                                 <TableCell align='center'>
                                     <AssignMember task_id={task.id} tasks={tasks} setTasks={setTasks} />

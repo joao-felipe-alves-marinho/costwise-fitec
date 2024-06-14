@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { isAuthenticated, refresh } from './authService/AuthService';
 
 export const Api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL + '/api/v1' ,
+    baseURL: import.meta.env.VITE_API_URL + '/api/v1',
 });
 
 Api.interceptors.request.use((config) => {

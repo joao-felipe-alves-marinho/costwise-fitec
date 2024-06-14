@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from '@mui/material';
-import { useOutletContext } from 'react-router-dom';
+import { Box, LinearProgress, Stack, Typography } from '@mui/material';
+import { useNavigation, useOutletContext } from 'react-router-dom';
 
 import { UserContext } from '../../shared/types/Types';
 import ProjectCard from './ProjectCard';
@@ -7,6 +7,12 @@ import NewProject from './NewProject';
 
 export function Home() {
     const { user, setUser } = useOutletContext<UserContext>();
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Stack spacing={4} mt={8}>

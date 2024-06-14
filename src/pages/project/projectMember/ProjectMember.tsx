@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { useLoaderData, useNavigation } from 'react-router-dom';
+import { Box, LinearProgress, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import { Member } from '../../../shared/types/Types';
 import NewMember from './NewMember';
@@ -10,6 +10,12 @@ import EditMember from './EditMember';
 
 export function ProjectMember() {
     const [members, setMembers] = useState<Member[]>(useLoaderData() as Member[]);
+
+    const navigation = useNavigation();
+
+    if (navigation.state === 'loading') {
+        return <LinearProgress sx={{mt: 32}} />;
+    }
 
     return (
         <Stack spacing={4}>
