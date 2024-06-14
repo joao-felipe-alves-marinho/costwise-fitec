@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Fab, Icon, Stack, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Project, ProjectData, UserContext } from '../../shared/types/Types';
 import { createProject } from '../../shared/services/api/projectService/ProjectService';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
 const NewProjectSchema = yup.object({
     name_project: yup.string().required('Esse campo é obrigatório.').min(5, 'O nome do projeto deve ter pelo menos 5 caracteres.').max(255, 'O nome do projeto deve ter no máximo 255 caracteres.'),
@@ -15,7 +17,7 @@ const NewProjectSchema = yup.object({
 });
 
 export default function NewProject(props: UserContext) {
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
+    const { register, control, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_project: '',
             description_project: '',
@@ -32,7 +34,11 @@ export default function NewProject(props: UserContext) {
     function onSubmit(data: ProjectData) {
         setIsLoading(true);
         setSuccess(false);
-        createProject(data)
+        let deadlineFormat = '';
+        if (data.deadline) {
+            deadlineFormat = format(new Date(data.deadline), 'yyyy-MM-dd');
+        }
+        createProject({ ...data, deadline: deadlineFormat })
             .then((response: Project | null) => {
                 setSuccess(true);
                 props.setUser((oldUser) => {
@@ -53,6 +59,7 @@ export default function NewProject(props: UserContext) {
                 setSuccess(false);
 
             });
+      
     }
 
     const [open, setOpen] = useState(false);
@@ -99,15 +106,30 @@ export default function NewProject(props: UserContext) {
                             placeholder='Descrição do Projeto 1'
                             fullWidth
                         />
-                        <TextField
-                            {...register('deadline')}
-                            error={!!errors.deadline}
-                            helperText={errors.deadline?.message}
-                            disabled={isLoading || success}
-                            label='Prazo do Projeto'
-                            placeholder='YYYY-MM-DD'
-                            required
-                            fullWidth
+                        <Controller
+                            control={control}
+                            name='deadline'
+                            render={({ field }) => {
+                                return (
+                                    <DatePicker
+                                        label='Prazo do Projeto'
+                                        disablePast
+                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                        value={field.value ? new Date(field.value) : null}
+                                        inputRef={field.ref}
+                                        onChange={(date) => {
+                                            field.onChange(date);
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                required: true,
+                                                error: !!errors.deadline,
+                                                helperText: errors.deadline?.message,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                         <TextField
                             {...register('expected_budget')}

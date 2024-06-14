@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Fab, Icon, Stack, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { TaskContext, TaskData } from '../../../shared/types/Types';
 import { createTask } from '../../../shared/services/api/taskService/TaskService';
 import { useParams } from 'react-router-dom';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
 const NewTaskSchema = yup.object({
     name_task: yup.string().required('Esse campo é obrigatório.').min(5, 'O nome da tarefa deve ter pelo menos 5 caracteres.').max(255, 'O nome do projeto deve ter no máximo 255 caracteres.'),
@@ -15,7 +17,7 @@ const NewTaskSchema = yup.object({
 });
 
 export default function NewTask(props: TaskContext) {
-    const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
+    const { register, control, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         defaultValues: {
             name_task: '',
             description_task: '',
@@ -35,7 +37,11 @@ export default function NewTask(props: TaskContext) {
     function onSubmit(data: TaskData) {
         setIsLoading(true);
         setSuccess(false);
-        createTask(project_id, data)
+        let deadlineFormat = '';
+        if (data.deadline) {
+            deadlineFormat = format(new Date(data.deadline), 'yyyy-MM-dd');
+        }
+        createTask(project_id, {...data, deadline: deadlineFormat})
             .then((response) => {
                 setSuccess(true);
                 props.setTasks((oldTasks) => {
@@ -96,15 +102,30 @@ export default function NewTask(props: TaskContext) {
                             placeholder='Descrição da Tarefa 1'
                             fullWidth
                         />
-                        <TextField
-                            {...register('deadline')}
-                            error={!!errors.deadline}
-                            helperText={errors.deadline?.message}
-                            disabled={isLoading || success}
-                            label='Prazo da Tarefa'
-                            placeholder='YYYY-MM-DD'
-                            required
-                            fullWidth
+                        <Controller
+                            control={control}
+                            name='deadline'
+                            render={({ field }) => {
+                                return (
+                                    <DatePicker
+                                        label='Prazo da Tarefa'
+                                        disablePast
+                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                        value={field.value ? new Date(field.value) : null}
+                                        inputRef={field.ref}
+                                        onChange={(date) => {
+                                            field.onChange(date);
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                required: true,
+                                                error: !!errors.deadline,
+                                                helperText: errors.deadline?.message,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                     </Stack>
                 </DialogContent>

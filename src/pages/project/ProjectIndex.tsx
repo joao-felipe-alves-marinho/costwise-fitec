@@ -7,6 +7,11 @@ import ProjectDelete from './ProjectDelete';
 export function ProjectIndex() {
     const { project, setProject } = useOutletContext<ProjectContext>();
 
+    function formatDate(date: string) {
+        const parts = date.split('-');
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
     return (
         <Box m={4}>
             <Grid container spacing={8}>
@@ -30,9 +35,9 @@ export function ProjectIndex() {
                         spacing={1}
                     >
                         <Typography align='center' variant='h5'>Prazo:</Typography>
-                        <Typography color='primary' align='center' variant='h5'>{project?.deadline}</Typography>
+                        <Typography color='primary' align='center' variant='h5'>{project?.deadline && formatDate(project.deadline)}</Typography>
                         <Divider />
-                        <Typography align='center' variant='body1'>Data de Inicio: {project?.created_at}</Typography>
+                        <Typography align='center' variant='body1'>Data de Inicio: {project?.created_at && formatDate(project.created_at)}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
